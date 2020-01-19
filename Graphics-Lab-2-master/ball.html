@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+
+  <style type="text/css">
+    body {
+      background-color: white;
+    }
+  </style>
+
+</head>
+
+<body>
+  <h1 id="name">Ultan Kearns</h1>
+  <canvas id="canvas-for-ball" style="border:2px solid black" height="500px" width="500px"></canvas>
+
+  <script type="text/javascript">
+    // Gets a handle to the element with id canvasOne.
+    var canvas = document.getElementById("canvas-for-ball");
+    // Get a 2D context for the canvas.
+    var ctx = canvas.getContext("2d");
+    class Ball {
+      constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.radius = r;
+      }
+      moveBall(xVelocity, yVelocity) {
+        this.x += xVelocity;
+        this.y += yVelocity;
+      }
+      drawBall() {
+        //divide circle into 7
+        var segmentsNo = 2 * Math.PI / 7;
+        var segment = 0;
+        ctx.fillStyle = "orange";
+        //draw circle and fill
+        ctx.arc(this.x, this.y, b.radius, 0, 2 * Math.PI);
+        ctx.fill();
+        for (var i = 0; i < 7; i++) {
+          //times i by segmentNo to get current segment
+          segment = i * segmentsNo;
+          ctx.moveTo(this.x, this.y);
+		  //add 0.2 to each segment everytime to get ball rotating
+          //have radius times cosine and sine of segment
+          ctx.lineTo(this.x + b.radius * Math.cos(segment), this.y + b.radius * Math.sin(segment));
+        }
+        //make lines visible and stroke
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+      }
+      resizeBall(xPos, yPos, r) {
+        this.x = xPos;
+        this.y = yPos;
+        this.r = r;
+      }
+    }
+    //velocity of ball
+    var yVel = 2;
+    var xVel = 3;
+    //since radius = 50 have ball start xpos:50 ypos:50
+    var b = new Ball(50, 50, 50);
+    // Get the animation going.
+    repeatme();
+    // A function to repeat every time the animation loops.
+    function repeatme() {
+      // Draw the ball (stroked, not filled).
+      ctx.beginPath();
+      //clear whole canvas
+      ctx.clearRect(0, 0, 500, 500);
+      //If ball reaches end of screen
+      if (b.y >= canvas.height - b.radius) {
+        yVel *= -1;
+      }
+      //check if yvel is decreasing and if b.y is <= b.radius reverse
+      else if (yVel < 0 && b.y <= b.radius) {
+        yVel *= -1;
+      }
+      if (b.x >= canvas.width - b.radius) {
+        xVel *= -1;
+      }
+      //check if xvel is decreasing and if b.y is <= b.radius reverse
+      else if (xVel < 0 && b.x == b.radius) {
+        xVel *= -1;
+      }
+      b.moveBall(xVel, yVel);
+      b.drawBall();
+      window.requestAnimationFrame(repeatme);
+    }
+  </script>
+
+</body>
+
+</html>

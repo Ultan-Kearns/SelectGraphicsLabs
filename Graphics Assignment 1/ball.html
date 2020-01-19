@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+      body {
+          background-color: white;
+      }
+    </style>
+
+  </head>
+
+  <body>
+	<h1 id = "name">Ultan Kearns</h1>
+    <canvas id="canvas-for-ball" style = "border:2px solid black" height = "500px" width =  "500 px"></canvas>
+
+    <script type="text/javascript">
+      // Gets a handle to the element with id canvasOne.
+      var canvas = document.getElementById("canvas-for-ball");
+      // Get a 2D context for the canvas.
+      var ctx = canvas.getContext("2d");
+      // The vertical location of the ball.
+      var y = 10;
+	  //velocity of ball
+	  var vel = 5;
+      // A function to repeat every time the animation loops.
+      function repeatme() {
+        // Draw the ball (stroked, not filled).
+        ctx.beginPath();
+		//clear whole canvas
+		ctx.clearRect(0,0,500,500);
+        ctx.arc(50, y, 10, 0, 2 * Math.PI);
+        ctx.stroke();
+        // Update the y location,changed to 10 to make ball visible.
+        y += vel;
+		//If ball reaches end of screen
+		if(y != canvas.height)
+		{
+			//draw animation again
+			window.requestAnimationFrame(repeatme);
+		}
+		else
+		{
+			var b = new Ball(0,500);
+			if(y > canvas.height)
+			{
+				Ball.moveBall(0,vel * -1);
+				y += vel;
+				Ball.drawBall();
+			}
+		}
+	  }
+      // Get the animation going.
+	  repeatme();
+	  
+	  class Ball{
+		  constructor(x,y)
+		  {
+			this.x = x;
+			this.y = y;
+		  }
+		  static moveBall(xVelocity,yVelocity)
+		  {
+			this.x += xVelocity;
+			this.y += yVelocity;
+		  }
+		  static drawBall()
+		  {
+			ctx.arc(this.x,this.y,this.r,0,2 * Math.PI);
+		  }
+		  static resizeBall(xPos,yPos,r)
+		  {
+			this.x = xPos;
+			this.y = yPos;
+			this.r = r;
+		  }
+	  }
+    </script>
+
+  </body>
+
+</html>

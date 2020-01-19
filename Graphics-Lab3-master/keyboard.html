@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+<html>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Canvas</title>
+
+  <style type="text/css">
+    canvas {
+      border: 1px solid grey;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <canvas id="canvas-for-Ball" height="500px" width="500px"></canvas>
+
+  <script type="text/javascript">
+    // Gets a handle to the element with id canvasOne.
+    var canvas = document.getElementById("canvas-for-Ball");
+    // Get a 2D context for the canvas.
+    var ctx = canvas.getContext("2d");
+    class Ball {
+      constructor(x, y, r) {
+        this.x = x;
+        this.y = y;
+        this.radius = r;
+      }
+      moveBall(xVelocity, yVelocity) {
+        this.x += xVelocity;
+        this.y += yVelocity;
+      }
+      drawBall() {
+        //divide circle into 7
+        var segmentsNo = 2 * Math.PI / 7;
+        var segment = 0;
+        ctx.fillStyle = "orange";
+		//start new circle
+		ctx.beginPath();
+        //draw circle and fill
+        ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+        ctx.fill();
+		//problem here for two circles
+        for (var i = 0; i < 7; i++) {
+          //times i by segmentNo to get current segment
+          segment = i * segmentsNo;
+          ctx.moveTo(this.x, this.y);
+          //have radius times cosine and sine of segment
+          ctx.lineTo(this.x + this.radius * Math.cos(segment), this.y + this.radius * Math.sin(segment));
+        }
+        //make lines visible and stroke
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "black";
+        ctx.stroke();
+      }
+      resizeBall(xPos, yPos, r) {
+        this.x = xPos;
+        this.y = yPos;
+        this.r = r;
+      }
+    }
+    //velocity of ball 1
+    var yVel = 5;
+    var xVel = 3;
+	//velocity of ball 2
+	var yVel2 = 8;
+	var xVel2 = 4;
+    var b = new Ball(50, 50, 50);
+	var b2 = new Ball(300,50,50);
+    canvas.addEventListener("click", function(event) {
+      //mousecursor x pos and y
+      var xPos = document.getElementById("canvas-for-Ball").offsetLeft;
+      var yPos = document.getElementById("canvas-for-Ball").offsetTop;
+      console.log(event.clientX - xPos + " " + event.clientY - yPos);
+      //check if Ball will be out of bounds if redrawn at centre of cursor
+      if (event.clientX - xPos < canvas.height - b.radius &&
+        event.clientY - yPos < canvas.height - b.radius &&
+        event.clientY - yPos > b.radius && event.clientX > b.radius
+      )
+        //redraw Ball at center of cursor
+        b.resizeBall(event.clientX - xPos, event.clientY - yPos, b.radius);
+    });
+    // Get the animation going.
+    repeatme();
+    // A function to repeat every time the animation loops.
+    function repeatme() {
+      // Draw the Ball (stroked, not filled).
+      ctx.beginPath();
+      //clear whole canvas
+      ctx.clearRect(0, 0, 500, 500);
+      //If Ball reaches end of screen
+      if (b.y >= canvas.height - b.radius) {
+        yVel *= -1;
+		//if b1 reaches bottom make bounce to 90% of prev height
+		yVel *= 0.9;
+      }
+      //check if yvel is decreasing and if b.y is <= b.radius reverse
+      else if (yVel < 0 && b.y <= b.radius) {
+        yVel *= -1;
+      }
+      if (b.x >= canvas.width - b.radius) {
+        xVel *= -1;
+      }
+      //check if xvel is decreasing and if b.y is <= b.radius reverse
+      else if (xVel < 0 && b.x <= b.radius) {
+        xVel *= -1;
+      }
+	  if (b2.y >= canvas.height - b2.radius) {
+        yVel2 *= -1;
+		//if b2 reaches bottom make bounce to 90% of prev height
+		yVel2 *= 0.9;
+      }
+      //check if yvel is decreasing and if b.y is <= b.radius reverse
+      else if (yVel2 <= 0 && b2.y <= b2.radius) {
+        yVel2 *= -1;
+      }
+      if (b2.x >= canvas.width - b2.radius) {
+        xVel2 *= -1;
+      }
+      //check if xvel is decreasing and if b.y is <= b.radius reverse
+      else if (xVel2 <= 0 && b2.x <= b2.radius) {
+        xVel2 *= -1;
+      }
+      b.moveBall(xVel, yVel);
+      b.drawBall();
+	  b2.moveBall(xVel2,yVel2);
+	  b2.drawBall();
+	  yVel += 0.5;
+	  yVel2 += 0.5;
+      window.requestAnimationFrame(repeatme);
+    }
+    // Make the fill style red.
+    ctx.fillStyle = "rgb(255, 0, 0)";
+
+    // Add a Javascript event listener to the keypress event.
+    window.addEventListener("keypress", function(event) {
+      // Just log the event to the console.
+      console.log(event);
+    });
+
+    //keypresses with jQuery
+    $(document.body).on('keydown', function(e) {
+      console.log(e.which);
+      switch (e.which) {
+        // key code for left arrow
+        case 37:
+          console.log('left arrow key pressed!');
+          xVel--;
+          break;
+          //key code for up arrow
+        case 38:
+          console.log("up arrow key is pressed");
+          yVel++;
+          break;
+        case 40:
+          console.log("down arrow is pressed")
+          yVel--;
+          break;
+          // key code for right arrow
+        case 39:
+          console.log('right arrow key pressed!');
+          xVel++;
+          break;
+      }
+    });
+  </script>
+
+</body>
+
+</html>

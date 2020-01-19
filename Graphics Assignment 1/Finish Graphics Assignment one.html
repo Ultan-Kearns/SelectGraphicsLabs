@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Canvas</title>
+
+    <style type="text/css">
+		canvas{
+			border:2px solid black;
+		}
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvasOne" width = "500px" height = "500px"></canvas>
+
+    <script type="text/javascript">
+		// Gets a handle to the element with id canvasOne.
+		var canvas = document.getElementById("canvasOne");
+		// Set the canvas up for drawing in 2D.
+		var ctx = canvas.getContext("2d");
+		// Set the fill colour to bright red.
+		ctx.fillStyle = "rgb(0, 255, 0,0.2)";
+		// Create a filled rectangle at co-ordinates (10,10)
+		// with height and width set to 100.
+		
+		//create two rectangles
+		ctx.fillRect(10, 10, 100, 200);
+		ctx.fillStyle = "rgba(255,0,0,0.1)";
+		ctx.fillRect(10, 140, 100, 200);
+		ctx.fillStyle = "rgb(255,0,0)";
+		//write name to screen
+		ctx.font = '50px Georgia';
+		ctx.fillText('ultan kearns',210,210);	
+		//draw circle
+		ctx.beginPath();
+		ctx.arc(200,75,50,0,2*Math.PI);
+		ctx.stroke();
+		ctx.fillStyle = "red";
+		ctx.fill();
+		ctx.beginPath();
+		ctx.arc(400,75,50,0,2*Math.PI);
+		ctx.stroke();
+		ctx.fillStyle = "green";
+		ctx.fill();
+		ctx.fillRect(300,300,100,100);
+		ctx.beginPath();
+		ctx.arc(350,350,50,0,2*Math.PI);
+		ctx.stroke();
+		ctx.fillStyle = "blue";
+		ctx.fill();
+		//pacman
+		ctx.beginPath();
+		ctx.arc(200,400,50,0,Math.PI * 2);
+		ctx.stroke();
+		ctx.fillStyle = "yellow";
+		ctx.fill();
+		ctx.lineTo(200,400);
+		ctx.moveTo(200,400);
+ 
+		ctx.stroke();
+    </script>
+
+  </body>
+
+</html>
